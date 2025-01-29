@@ -15,22 +15,19 @@ export default function SoundButton({
   iconName,
   size,
 }: SoundButtonProps) {
-  const Icon = LucideIcons[iconName] as React.ElementType;
+  const Icon = LucideIcons[iconName] as React.ElementType & { displayName?: string };
 
-  // Alteração 1: Inicialize o useRef com null e crie o objeto Audio dentro de um useEffect
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(0.5);
 
-  // Alteração 2: Crie o objeto Audio apenas no lado do cliente
   useEffect(() => {
     if (typeof window !== "undefined") {
       audioRef.current = new Audio(selectAudio());
-      audioRef.current.loop = true; // Configura o loop aqui
+      audioRef.current.loop = true;
     }
   }, []);
 
-  // Alteração 3: Use o audioRef.current dentro de useEffect para evitar erros de referência
   useEffect(() => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -51,10 +48,9 @@ export default function SoundButton({
     return null;
   }
 
-  // Alteração 4: A função selectAudio agora retorna a URL do áudio, não um objeto Audio
   function selectAudio() {
     const found = audios.find((audio) => audio.name === Icon.displayName);
-    return found?.url || ""; // Retorna a URL ou uma string vazia se não encontrar
+    return found?.url || "";
   }
 
   return (
