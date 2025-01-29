@@ -23,8 +23,10 @@ export default function SoundButton({
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      audioRef.current = new Audio(selectAudio());
-      audioRef.current.loop = true;
+      const audio = new Audio(selectAudio());
+      audio.loop = true;
+      audioRef.current = audio;
+      audioRef.current.volume = 0.5
     }
   }, []);
 
@@ -58,11 +60,8 @@ export default function SoundButton({
     <div className="flex flex-col items-center gap-2">
       <button
         onClick={() => setIsPlaying(!isPlaying)}
-        className={
-          !isPlaying
-            ? "flex flex-col items-center gap-2 hover:text-blue-600"
-            : "flex flex-col items-center gap-2 text-blue-600"
-        }
+        className={`flex flex-col items-center gap-2 hover:text-blue-600 ${isPlaying? "text-blue-600" : ""
+          }`}
       >
         <Icon size={size} />
         {children}
@@ -70,10 +69,11 @@ export default function SoundButton({
       <div className="flex gap-2">
         <input
           type="range"
+          min="0"
           max="1"
           step="0.1"
           className="cursor-pointer accent-slate-700 w-24"
-          onChange={(e) => setVolume(Number(e.target.value))}
+          onChange={(e) => setVolume(parseFloat(e.target.value))}
         />
       </div>
     </div>
