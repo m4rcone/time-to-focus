@@ -15,7 +15,7 @@ export default function SoundButton({
   iconName,
   size,
 }: SoundButtonProps) {
-  const Icon = LucideIcons[iconName] as React.ElementType & { displayName?: string };
+  const Icon = LucideIcons[iconName] as React.ComponentType<{ size?: number }>;
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -49,7 +49,8 @@ export default function SoundButton({
   }
 
   function selectAudio() {
-    const found = audios.find((audio) => audio.name === Icon.displayName);
+    const iconDisplayName = (Icon as { displayName?: string }).displayName;
+    const found = audios.find((audio) => audio.name === iconDisplayName);
     return found?.url || "";
   }
 
